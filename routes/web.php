@@ -6,10 +6,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['web'])->group(function () {
     
     Route::get('/', function () {
-        return redirect('/demo-center');
+        return view('chatbot-enhanced');
+    });
+    
+    Route::get('/chatbot', function () {
+        return view('chatbot-enhanced');
     });
 
-    Route::get('/chatbot/enhanced', function () {
+    Route::get('/demo-center', function () {
         return view('chatbot-enhanced');
     });
 

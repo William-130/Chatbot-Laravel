@@ -426,10 +426,10 @@
             <!-- Chat Container dengan Flex Layout - Avatar Area + Messages + Input -->
             <div class="flex flex-col h-[720px]">
                 <!-- Avatar Display Area - Fixed Height -->
-                <div class="flex-shrink-0 flex flex-col items-center space-y-3 p-6 bg-gradient-to-b from-gray-50 to-white dark:from-gray-700 dark:to-gray-800">
+                <div class="flex-shrink-0 flex flex-col items-center space-y-2 p-4 bg-gradient-to-b from-gray-50 to-white dark:from-gray-700 dark:to-gray-800">
                     <div class="relative">
-                        <!-- Avatar bulat di tengah - diperbesar 3 kali lipat -->
-                        <div class="w-96 h-96 rounded-full overflow-hidden shadow-2xl border-4 border-white/50">
+                        <!-- Avatar bulat di tengah - ukuran normal -->
+                        <div class="w-32 h-32 rounded-full overflow-hidden shadow-2xl border-4 border-white/50">
                             <video id="main-avatar-video" 
                                    class="w-full h-full object-cover" 
                                    autoplay 
@@ -443,7 +443,7 @@
                             </video>
                             <!-- Fallback avatar -->
                             <div class="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center" style="display: none;">
-                                <svg class="w-48 h-48 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                                 </svg>
                             </div>
