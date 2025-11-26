@@ -26,13 +26,19 @@
         language: 'id-ID',
         maxRetries: 3,
         requestTimeout: 30000,
-        voiceRate: 0.9,
-        voicePitch: 1,
+        voiceRate: 0.85,
+        voicePitch: 1.2, // Higher pitch for feminine voice
         animationDuration: 300,
+        // RAG Configuration
+        rag: {
+            enabled: true, // Enable RAG by default
+            apiUrl: '/api/chatbot/rag',
+            autoManage: true // Automatically manage RAG context
+        },
         // Avatar configuration - Fixed paths
         avatar: {
             enabled: true,
-            basePath: '\public\videos\avatar', // Fixed path
+            basePath: '/public/videos/avatar', // Fixed path
             files: {
                 idle: 'idle.mp4',
                 listening: 'listening.mp4',
@@ -1104,12 +1110,14 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        'X-RAG-Enabled': config.rag.enabled ? '1' : '0'
                     },
                     body: JSON.stringify({
                         message: message,
                         session_id: state.sessionId,
-                        timestamp: Date.now()
+                        timestamp: Date.now(),
+                        use_rag: config.rag.enabled
                     }),
                     signal: controller.signal
                 });
@@ -1674,6 +1682,77 @@
             console.log('- Avatar videos loaded:', avatar.loadedVideos);
             console.log('- Speech recognition:', !!speech.recognition);
             console.log('- Microphone support:', !!navigator.mediaDevices?.getUserMedia);
+        },
+        // RAG Management Functions
+        rag: {
+            getConfig: async function() {
+                try {
+                    const response = await fetch(config.rag.apiUrl + '/config', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    const data = await response.json();
+                    console.log('📚 RAG Config:', data);
+                    return data;
+                } catch (error) {
+                    console.error('❌ Failed to get RAG config:', error);
+                    return null;
+                }
+            },
+            updateWebsite: async function(websiteId, updates) {
+                try {
+                    const response = await fetch(config.rag.apiUrl + '/config', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            website_id: websiteId,
+                            ...updates
+                        })
+                    });
+                    const data = await response.json();
+                    console.log('📚 RAG Website Updated:', data);
+                    return data;
+                } catch (error) {
+                    console.error('❌ Failed to update RAG website:', error);
+                    return null;
+                }
+            },
+            testSearch: async function(query) {
+                try {
+                    const response = await fetch(config.rag.apiUrl + '/test', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            query: query
+                        })
+                    });
+                    const data = await response.json();
+                    console.log('📚 RAG Search Test:', data);
+                    return data;
+                } catch (error) {
+                    console.error('❌ Failed to test RAG search:', error);
+                    return null;
+                }
+            },
+            enable: function() {
+                config.rag.enabled = true;
+                console.log('📚 RAG Enabled');
+            },
+            disable: function() {
+                config.rag.enabled = false;
+                console.log('📚 RAG Disabled');
+            },
+            isEnabled: function() {
+                return config.rag.enabled;
+            }
         },
         config: config,
         elements: elements

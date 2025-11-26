@@ -348,7 +348,7 @@
     <!-- Chatbot Popup Widget -->
     <div id="chatbot-popup" class="fixed bottom-6 right-6 z-50 hidden">
         <!-- Chatbot Container -->
-        <div class="w-96 h-[800px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden animate-bounce-in chatbot-popup-container">
+        <div class="w-80 h-[600px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden animate-bounce-in chatbot-popup-container">
             <!-- Header -->
             <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-4 text-white relative overflow-hidden">
                 <!-- Background pattern -->
@@ -424,12 +424,12 @@
             </div>
             
             <!-- Chat Container dengan Flex Layout - Avatar Area + Messages + Input -->
-            <div class="flex flex-col h-[720px]">
+            <div class="flex flex-col h-[520px]">
                 <!-- Avatar Display Area - Fixed Height -->
                 <div class="flex-shrink-0 flex flex-col items-center space-y-2 p-4 bg-gradient-to-b from-gray-50 to-white dark:from-gray-700 dark:to-gray-800">
                     <div class="relative">
-                        <!-- Avatar bulat di tengah - ukuran normal -->
-                        <div class="w-32 h-32 rounded-full overflow-hidden shadow-2xl border-4 border-white/50">
+                        <!-- Avatar bulat di tengah - ukuran diperbesar -->
+                        <div class="w-40 h-40 rounded-full overflow-hidden shadow-2xl border-4 border-white/50">
                             <video id="main-avatar-video" 
                                    class="w-full h-full object-cover" 
                                    autoplay 
@@ -443,7 +443,7 @@
                             </video>
                             <!-- Fallback avatar -->
                             <div class="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center" style="display: none;">
-                                <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                                 </svg>
                             </div>
@@ -583,8 +583,8 @@
             maxRetries: 3,
             retryDelay: 1000,
             speechLang: 'id-ID',
-            voiceRate: 0.9,
-            voicePitch: 1,
+            voiceRate: 0.85,
+            voicePitch: 1.2, // Higher pitch for more feminine voice
             animationDuration: 300,
             requestTimeout: 30000 // 30 seconds
         };
@@ -1271,15 +1271,51 @@
                 
                 const utterance = new SpeechSynthesisUtterance(currentChunk);
                 
-                // Configure voice
+                // Configure voice - prioritize Google female voices
                 const voices = speechSynthesis.getVoices();
-                const indonesianVoice = voices.find(voice => 
-                    voice.lang.includes('id') || voice.lang.includes('ID')
-                ) || voices[0];
                 
-                if (indonesianVoice) {
-                    utterance.voice = indonesianVoice;
-                    console.log('🔊 Using voice:', indonesianVoice.name);
+                // Try to find Google female Indonesian voice first
+                let selectedVoice = voices.find(voice => 
+                    voice.name.toLowerCase().includes('google') && 
+                    voice.lang.includes('id-ID') &&
+                    (voice.name.toLowerCase().includes('female') || voice.name.toLowerCase().includes('woman'))
+                );
+                
+                // Fallback to any Google Indonesian voice
+                if (!selectedVoice) {
+                    selectedVoice = voices.find(voice => 
+                        voice.name.toLowerCase().includes('google') && 
+                        voice.lang.includes('id-ID')
+                    );
+                }
+                
+                // Fallback to Google female English voice
+                if (!selectedVoice) {
+                    selectedVoice = voices.find(voice => 
+                        voice.name.toLowerCase().includes('google') && 
+                        voice.lang.includes('en') &&
+                        (voice.name.toLowerCase().includes('female') || voice.name.toLowerCase().includes('woman'))
+                    );
+                }
+                
+                // Fallback to any female Indonesian voice
+                if (!selectedVoice) {
+                    selectedVoice = voices.find(voice => 
+                        voice.lang.includes('id-ID') &&
+                        (voice.name.toLowerCase().includes('female') || voice.name.toLowerCase().includes('woman'))
+                    );
+                }
+                
+                // Final fallback to first Indonesian voice
+                if (!selectedVoice) {
+                    selectedVoice = voices.find(voice => 
+                        voice.lang.includes('id') || voice.lang.includes('ID')
+                    ) || voices[0];
+                }
+                
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                    console.log('🔊 Using voice:', selectedVoice.name, '- Lang:', selectedVoice.lang);
                 }
                 
                 utterance.rate = CONFIG.voiceRate;
@@ -1534,14 +1570,31 @@
                 const voices = speechSynthesis.getVoices();
                 console.log('🔊 Available voices:', voices.length);
                 
+                // Log Google voices if available
+                const googleVoices = voices.filter(voice => 
+                    voice.name.toLowerCase().includes('google')
+                );
+                if (googleVoices.length > 0) {
+                    console.log('🔊 Google voices found:', googleVoices.map(v => `${v.name} (${v.lang})`));
+                }
+                
                 // Log Indonesian voices if available
                 const indonesianVoices = voices.filter(voice => 
                     voice.lang.includes('id') || voice.lang.includes('ID')
                 );
                 if (indonesianVoices.length > 0) {
-                    console.log('🔊 Indonesian voices found:', indonesianVoices.map(v => v.name));
+                    console.log('🔊 Indonesian voices found:', indonesianVoices.map(v => `${v.name} (${v.lang})`));
                 } else {
                     console.log('🔊 No Indonesian voices found, will use default voice');
+                }
+                
+                // Log female voices
+                const femaleVoices = voices.filter(voice => 
+                    voice.name.toLowerCase().includes('female') || 
+                    voice.name.toLowerCase().includes('woman')
+                );
+                if (femaleVoices.length > 0) {
+                    console.log('🔊 Female voices found:', femaleVoices.map(v => `${v.name} (${v.lang})`));
                 }
             };
         }

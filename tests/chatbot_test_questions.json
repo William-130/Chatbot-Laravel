@@ -1,0 +1,222 @@
+{
+  "test_suite": {
+    "name": "Chatbot Testing - FAQ & General Questions",
+    "description": "Test suite untuk menguji kemampuan chatbot menjawab FAQ dan pertanyaan umum",
+    "total_questions": 30,
+    "created_at": "2025-11-26"
+  },
+  "faq_questions": [
+    {
+      "id": "FAQ-001",
+      "question": "Apa itu SAKIP?",
+      "category": "FAQ - Government",
+      "expected_context": "RAG Database",
+      "keywords": ["SAKIP", "akuntabilitas", "kinerja", "pemerintah"]
+    },
+    {
+      "id": "FAQ-002",
+      "question": "Bagaimana cara menggunakan chatbot ini?",
+      "category": "FAQ - Usage",
+      "expected_context": "General Knowledge",
+      "keywords": ["chatbot", "cara", "menggunakan", "fitur"]
+    },
+    {
+      "id": "FAQ-003",
+      "question": "Apa fitur yang tersedia di chatbot ini?",
+      "category": "FAQ - Features",
+      "expected_context": "General Knowledge",
+      "keywords": ["fitur", "voice", "text", "avatar", "RAG"]
+    },
+    {
+      "id": "FAQ-004",
+      "question": "Bagaimana cara mengaktifkan voice input?",
+      "category": "FAQ - Voice",
+      "expected_context": "General Knowledge",
+      "keywords": ["voice", "microphone", "speech recognition"]
+    },
+    {
+      "id": "FAQ-005",
+      "question": "Apa itu Metro Jakarta?",
+      "category": "FAQ - Transport",
+      "expected_context": "RAG Database",
+      "keywords": ["metro", "jakarta", "transportasi", "busway"]
+    },
+    {
+      "id": "FAQ-006",
+      "question": "Bagaimana cara mengganti tema dark mode?",
+      "category": "FAQ - Settings",
+      "expected_context": "General Knowledge",
+      "keywords": ["dark mode", "theme", "pengaturan"]
+    },
+    {
+      "id": "FAQ-007",
+      "question": "Apakah chatbot ini gratis?",
+      "category": "FAQ - Pricing",
+      "expected_context": "General Knowledge",
+      "keywords": ["gratis", "biaya", "harga"]
+    },
+    {
+      "id": "FAQ-008",
+      "question": "Bagaimana cara scrape website untuk RAG?",
+      "category": "FAQ - Technical",
+      "expected_context": "General Knowledge",
+      "keywords": ["scrape", "RAG", "website", "artisan"]
+    },
+    {
+      "id": "FAQ-009",
+      "question": "Apa itu teknologi RAG?",
+      "category": "FAQ - Technology",
+      "expected_context": "General Knowledge",
+      "keywords": ["RAG", "retrieval", "augmented", "generation"]
+    },
+    {
+      "id": "FAQ-010",
+      "question": "Bagaimana cara mengintegrasikan chatbot ke website?",
+      "category": "FAQ - Integration",
+      "expected_context": "General Knowledge",
+      "keywords": ["integrasi", "embed", "widget", "javascript"]
+    }
+  ],
+  "general_questions": [
+    {
+      "id": "GEN-001",
+      "question": "Apa itu artificial intelligence?",
+      "category": "Technology - AI",
+      "expected_context": "General Knowledge",
+      "keywords": ["AI", "machine learning", "teknologi"]
+    },
+    {
+      "id": "GEN-002",
+      "question": "Jelaskan tentang programming Python",
+      "category": "Technology - Programming",
+      "expected_context": "General Knowledge",
+      "keywords": ["python", "programming", "bahasa pemrograman"]
+    },
+    {
+      "id": "GEN-003",
+      "question": "Apa perbedaan frontend dan backend?",
+      "category": "Technology - Web Development",
+      "expected_context": "General Knowledge",
+      "keywords": ["frontend", "backend", "web development"]
+    },
+    {
+      "id": "GEN-004",
+      "question": "Bagaimana cara belajar coding untuk pemula?",
+      "category": "Education - Programming",
+      "expected_context": "General Knowledge",
+      "keywords": ["belajar", "coding", "pemula", "tips"]
+    },
+    {
+      "id": "GEN-005",
+      "question": "Apa itu database MySQL?",
+      "category": "Technology - Database",
+      "expected_context": "General Knowledge",
+      "keywords": ["database", "MySQL", "SQL"]
+    },
+    {
+      "id": "GEN-006",
+      "question": "Jelaskan tentang machine learning",
+      "category": "Technology - ML",
+      "expected_context": "General Knowledge",
+      "keywords": ["machine learning", "AI", "algoritma"]
+    },
+    {
+      "id": "GEN-007",
+      "question": "Apa itu Laravel framework?",
+      "category": "Technology - Framework",
+      "expected_context": "General Knowledge",
+      "keywords": ["Laravel", "PHP", "framework"]
+    },
+    {
+      "id": "GEN-008",
+      "question": "Bagaimana cara kerja API?",
+      "category": "Technology - API",
+      "expected_context": "General Knowledge",
+      "keywords": ["API", "REST", "endpoint"]
+    },
+    {
+      "id": "GEN-009",
+      "question": "Apa manfaat cloud computing?",
+      "category": "Technology - Cloud",
+      "expected_context": "General Knowledge",
+      "keywords": ["cloud", "computing", "AWS", "server"]
+    },
+    {
+      "id": "GEN-010",
+      "question": "Jelaskan tentang cybersecurity",
+      "category": "Technology - Security",
+      "expected_context": "General Knowledge",
+      "keywords": ["security", "hacking", "enkripsi"]
+    },
+    {
+      "id": "GEN-011",
+      "question": "Apa itu Big Data?",
+      "category": "Technology - Data",
+      "expected_context": "General Knowledge",
+      "keywords": ["big data", "data science", "analytics"]
+    },
+    {
+      "id": "GEN-012",
+      "question": "Bagaimana cara membuat website?",
+      "category": "Technology - Web",
+      "expected_context": "General Knowledge",
+      "keywords": ["website", "HTML", "CSS", "JavaScript"]
+    },
+    {
+      "id": "GEN-013",
+      "question": "Apa itu Internet of Things?",
+      "category": "Technology - IoT",
+      "expected_context": "General Knowledge",
+      "keywords": ["IoT", "smart device", "sensor"]
+    },
+    {
+      "id": "GEN-014",
+      "question": "Jelaskan tentang blockchain",
+      "category": "Technology - Blockchain",
+      "expected_context": "General Knowledge",
+      "keywords": ["blockchain", "cryptocurrency", "bitcoin"]
+    },
+    {
+      "id": "GEN-015",
+      "question": "Apa itu responsive design?",
+      "category": "Technology - Design",
+      "expected_context": "General Knowledge",
+      "keywords": ["responsive", "mobile", "design"]
+    },
+    {
+      "id": "GEN-016",
+      "question": "Bagaimana cara kerja Git version control?",
+      "category": "Technology - Tools",
+      "expected_context": "General Knowledge",
+      "keywords": ["git", "version control", "github"]
+    },
+    {
+      "id": "GEN-017",
+      "question": "Apa itu DevOps?",
+      "category": "Technology - Operations",
+      "expected_context": "General Knowledge",
+      "keywords": ["DevOps", "CI/CD", "deployment"]
+    },
+    {
+      "id": "GEN-018",
+      "question": "Jelaskan tentang microservices architecture",
+      "category": "Technology - Architecture",
+      "expected_context": "General Knowledge",
+      "keywords": ["microservices", "architecture", "API"]
+    },
+    {
+      "id": "GEN-019",
+      "question": "Apa manfaat menggunakan Docker?",
+      "category": "Technology - Containers",
+      "expected_context": "General Knowledge",
+      "keywords": ["Docker", "container", "virtualization"]
+    },
+    {
+      "id": "GEN-020",
+      "question": "Bagaimana cara optimasi performa website?",
+      "category": "Technology - Performance",
+      "expected_context": "General Knowledge",
+      "keywords": ["optimasi", "performance", "speed", "cache"]
+    }
+  ]
+}

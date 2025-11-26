@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Chatbot - Easy Configuration Example</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        .config-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .btn:hover {
+            background: #5a6fd8;
+        }
+        .btn.success {
+            background: #28a745;
+        }
+        .btn.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        .btn.danger {
+            background: #dc3545;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .website-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f9f9f9;
+        }
+        .log-area {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 RAG Chatbot Configuration Panel</h1>
+            <p>Easy management untuk RAG websites dan testing</p>
+        </div>
+
+        <div class="grid">
+            <!-- RAG Control Panel -->
+            <div class="config-panel">
+                <h3>🎛️ RAG Control Panel</h3>
+                
+                <div class="form-group">
+                    <label>RAG Status:</label>
+                    <span id="rag-status" class="status active">ENABLED</span>
+                    <button id="toggle-rag" class="btn">Toggle RAG</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Quick Actions:</label>
+                    <button id="get-config" class="btn">Get RAG Config</button>
+                    <button id="refresh-websites" class="btn success">Refresh Websites</button>
+                    <button id="test-connection" class="btn warning">Test Connection</button>
+                </div>
+
+                <div class="form-group">
+                    <label>RAG Search Test:</label>
+                    <input type="text" id="test-query" placeholder="Masukkan pertanyaan untuk test RAG..." />
+                    <button id="test-search" class="btn">Test Search</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Add New Website:</label>
+                    <input type="url" id="new-website-url" placeholder="https://example.com" />
+                    <button id="scrape-website" class="btn success">Scrape Website</button>
+                </div>
+            </div>
+
+            <!-- Website Management -->
+            <div class="config-panel">
+                <h3>🌐 Website Management</h3>
+                <div id="websites-list">
+                    <p>Loading websites...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Log Panel -->
+        <div class="config-panel">
+            <h3>📋 Activity Log</h3>
+            <div id="log" class="log-area">
+                <div>[INFO] RAG Configuration Panel loaded</div>
+            </div>
+            <button id="clear-log" class="btn">Clear Log</button>
+        </div>
+    </div>
+
+    <script>
+        // RAG Configuration Panel JavaScript
+        class RAGConfigPanel {
+            constructor() {
+                this.ragEnabled = true;
+                this.websites = [];
+                this.logElement = document.getElementById('log');
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.loadConfig();
+                this.log('RAG Configuration Panel initialized');
+            }
+
+            bindEvents() {
+                document.getElementById('toggle-rag').onclick = () => this.toggleRAG();
+                document.getElementById('get-config').onclick = () => this.getConfig();
+                document.getElementById('refresh-websites').onclick = () => this.refreshWebsites();
+                document.getElementById('test-connection').onclick = () => this.testConnection();
+                document.getElementById('test-search').onclick = () => this.testSearch();
+                document.getElementById('scrape-website').onclick = () => this.scrapeWebsite();
+                document.getElementById('clear-log').onclick = () => this.clearLog();
+            }
+
+            log(message, type = 'INFO') {
+                const timestamp = new Date().toLocaleTimeString();
+                const logEntry = document.createElement('div');
+                logEntry.innerHTML = `[${type}] ${timestamp} - ${message}`;
+                this.logElement.appendChild(logEntry);
+                this.logElement.scrollTop = this.logElement.scrollHeight;
+                console.log(`[${type}] ${message}`);
+            }
+
+            async loadConfig() {
+                try {
+                    const response = await fetch('/api/chatbot/rag/config');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.websites = data.websites;
+                        this.renderWebsites();
+                        this.log(`Loaded ${data.websites.length} websites from database`);
+                    } else {
+                        this.log('Failed to load RAG config', 'ERROR');
+                    }
+                } catch (error) {
+                    this.log(`Error loading config: ${error.message}`, 'ERROR');
+                }
+            }
+
+            renderWebsites() {
+                const container = document.getElementById('websites-list');
+                
+                if (this.websites.length === 0) {
+                    container.innerHTML = '<p>No websites configured</p>';
+                    return;
+                }
+
+                container.innerHTML = this.websites.map(website => `
+                    <div class="website-card">
+                        <h4>${website.name}</h4>
+                        <p><strong>URL:</strong> <a href="${website.url}" target="_blank">${website.url}</a></p>
+                        <p><strong>Description:</strong> ${website.description || 'No description'}</p>
+                        <p><strong>Status:</strong> 
+                            <span class="status ${website.is_active ? 'active' : 'inactive'}">
+                                ${website.is_active ? 'ACTIVE' : 'INACTIVE'}
+                            </span>
+                        </p>
+                        <p><strong>Last Scraped:</strong> ${website.last_scraped_at || 'Never'}</p>
+                        <button class="btn ${website.is_active ? 'danger' : 'success'}" 
+                                onclick="ragPanel.toggleWebsite(${website.id}, ${!website.is_active})">
+                            ${website.is_active ? 'Disable' : 'Enable'}
+                        </button>
+                        <button class="btn warning" onclick="ragPanel.rescrapeWebsite('${website.url}')">
+                            Re-scrape
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            toggleRAG() {
+                this.ragEnabled = !this.ragEnabled;
+                const statusElement = document.getElementById('rag-status');
+                const toggleButton = document.getElementById('toggle-rag');
+                
+                if (this.ragEnabled) {
+                    statusElement.textContent = 'ENABLED';
+                    statusElement.className = 'status active';
+                    toggleButton.textContent = 'Disable RAG';
+                    this.log('RAG system enabled');
+                } else {
+                    statusElement.textContent = 'DISABLED';
+                    statusElement.className = 'status inactive';
+                    toggleButton.textContent = 'Enable RAG';
+                    this.log('RAG system disabled');
+                }
+            }
+
+            async getConfig() {
+                this.log('Getting RAG configuration...');
+                await this.loadConfig();
+            }
+
+            async refreshWebsites() {
+                this.log('Refreshing websites list...');
+                await this.loadConfig();
+            }
+
+            async testConnection() {
+                try {
+                    this.log('Testing API connection...');
+                    const response = await fetch('/api/chatbot/status');
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        this.log(`API connection OK - Status: ${data.status}`, 'SUCCESS');
+                    } else {
+                        this.log('API connection failed', 'ERROR');
+                    }
+                } catch (error) {
+                    this.log(`Connection test failed: ${error.message}`, 'ERROR');
+                }
+            }
+
+            async testSearch() {
+                const query = document.getElementById('test-query').value.trim();
+                
+                if (!query) {
+                    this.log('Please enter a search query', 'WARNING');
+                    return;
+                }
+
+                try {
+                    this.log(`Testing RAG search with query: "${query}"`);
+                    
+                    const response = await fetch('/api/chatbot/rag/test', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ query: query })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        const context = data.context_data;
+                        this.log(`Search result: Found=${context.has_context}, Score=${context.relevance_score}, Method=${context.search_method}`, 'SUCCESS');
+                        
+                        if (context.has_context) {
+                            this.log(`Context from: ${context.website_name}`, 'INFO');
+                        } else {
+                            this.log('No relevant context found for this query', 'WARNING');
+                        }
+                    } else {
+                        this.log('RAG search test failed', 'ERROR');
+                    }
+                } catch (error) {
+                    this.log(`Search test error: ${error.message}`, 'ERROR');
+                }
+            }
+
+            async scrapeWebsite() {
+                const url = document.getElementById('new-website-url').value.trim();
+                
+                if (!url) {
+                    this.log('Please enter a website URL', 'WARNING');
+                    return;
+                }
+
+                try {
+                    this.log(`Starting to scrape website: ${url}`);
+                    
+                    // Note: This would typically call a scraping endpoint
+                    // For now, we'll just show a message
+                    this.log('Website scraping initiated. Use Artisan command for actual scraping:', 'INFO');
+                    this.log(`php artisan scrape:website ${url}`, 'INFO');
+                    
+                } catch (error) {
+                    this.log(`Scraping error: ${error.message}`, 'ERROR');
+                }
+            }
+
+            async toggleWebsite(websiteId, newStatus) {
+                try {
+                    this.log(`Updating website ${websiteId} status to ${newStatus ? 'active' : 'inactive'}`);
+                    
+                    const response = await fetch('/api/chatbot/rag/config', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            website_id: websiteId,
+                            is_active: newStatus
+                        })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.log(`Website status updated successfully`, 'SUCCESS');
+                        await this.loadConfig(); // Refresh the list
+                    } else {
+                        this.log('Failed to update website status', 'ERROR');
+                    }
+                } catch (error) {
+                    this.log(`Update error: ${error.message}`, 'ERROR');
+                }
+            }
+
+            async rescrapeWebsite(url) {
+                this.log(`Re-scraping website: ${url}`);
+                this.log('Use Artisan command for re-scraping:', 'INFO');
+                this.log(`php artisan scrape:website ${url}`, 'INFO');
+            }
+
+            clearLog() {
+                this.logElement.innerHTML = '<div>[INFO] Log cleared</div>';
+            }
+        }
+
+        // Initialize RAG Config Panel
+        const ragPanel = new RAGConfigPanel();
+
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            ragPanel.log('Auto-refreshing configuration...', 'INFO');
+            ragPanel.loadConfig();
+        }, 30000);
+    </script>
+
+    <!-- Chatbot Widget Configuration -->
+    <script>
+        // Configure chatbot widget with RAG
+        window.ChatbotConfig = {
+            rag: {
+                enabled: true,
+                apiUrl: '/api/chatbot/rag',
+                autoManage: true
+            },
+            // Position chatbot untuk demo
+            position: 'bottom-right'
+        };
+    </script>
+    
+    <!-- Load Chatbot Widget -->
+    <script src="/js/chatbot-widget.js"></script>
+</body>
+</html>

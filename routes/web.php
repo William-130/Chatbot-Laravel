@@ -25,6 +25,11 @@ Route::middleware(['web'])->group(function () {
         return response()->file(public_path('demo-embed.html'));
     });
 
+    // RAG Configuration Panel
+    Route::get('/rag-config', function () {
+        return response()->file(public_path('rag-config.html'));
+    });
+
     // Chatbot embed route untuk widget dengan SEMUA FITUR LENGKAP
     Route::get('/chatbot/embed', [App\Http\Controllers\ChatbotController::class, 'embedView']);
 
